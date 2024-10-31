@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -21,8 +22,13 @@ export class TasksController {
   }
 
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(
+    @Query() query: string,
+    @Query('isCompleted') isCompleted: boolean,
+    @Query('current') current: string,
+    @Query('pageSize') pageSize: string,
+  ) {
+    return this.tasksService.findAll(query, isCompleted, +current, +pageSize);
   }
 
   @Get(':id')
@@ -30,9 +36,9 @@ export class TasksController {
     return this.tasksService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(+id, updateTaskDto);
+  @Patch()
+  update(@Body() updateTaskDto: UpdateTaskDto) {
+    return this.tasksService.update(updateTaskDto);
   }
 
   @Delete(':id')

@@ -1,4 +1,5 @@
 // src/users/entity/users.entity.ts
+import { IsNotEmpty } from 'class-validator';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -8,10 +9,11 @@ import {
 
 @Entity() // Declares the class as an entity
 export class Task {
-  @PrimaryGeneratedColumn() // Auto-incremented primary key
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
+  @IsNotEmpty({ message: 'Title cannot be empty' })
   title: string;
 
   @CreateDateColumn()

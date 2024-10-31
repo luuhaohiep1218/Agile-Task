@@ -1,14 +1,17 @@
-// src/users/entity/users.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
-@Entity() // Declares the class as an entity
+@Entity()
 export class User {
-  @PrimaryGeneratedColumn() // Auto-incremented primary key
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
+  @IsEmail({}, { message: 'Email format is invalid' })
+  @IsNotEmpty({ message: 'Email cannot be empty' })
   email: string;
 
   @Column()
+  @IsNotEmpty({ message: 'Password cannot be empty' })
   password: string;
 }
