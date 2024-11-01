@@ -102,7 +102,11 @@ export class TasksService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async remove(id: number) {
+    const task = await this.taskRepository.delete(id);
+    if (!task) {
+      throw new BadRequestException('Task not available in system');
+    }
+    return { message: 'Task delete successfully', task };
   }
 }
