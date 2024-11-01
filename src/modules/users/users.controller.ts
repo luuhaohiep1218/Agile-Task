@@ -31,11 +31,6 @@ export class UsersController {
     return this.usersService.findAll(query, email, +current, +pageSize);
   }
 
-  @Get(':id')
-  findOne(@Param('email') email: string) {
-    return this.usersService.findOne(email);
-  }
-
   @Patch()
   update(@Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(updateUserDto);

@@ -10,23 +10,30 @@ import dayjs from 'dayjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import aqp from 'api-query-params';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Task) private taskRepository: Repository<Task>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
-    const { title } = createTaskDto;
+    const { title, userId } = createTaskDto;
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new BadRequestException('User not available in system');
+    }
     const task = new Task();
     task.title = title;
-    task.isCompleted = false;
+    task.userId = userId;
     return await this.taskRepository.save(task);
   }
 
   async findAll(
     query: string,
     isCompleted?: boolean,
+    userId?: number,
     current?: number,
     pageSize?: number,
   ) {
@@ -37,6 +44,10 @@ export class TasksService {
 
     current = current || 1;
     pageSize = pageSize || 10;
+
+    if (userId) {
+      filter.userId = userId;
+    }
 
     if (typeof isCompleted !== 'undefined') {
       filter.isCompleted = isCompleted;

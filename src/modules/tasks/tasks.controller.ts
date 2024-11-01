@@ -25,10 +25,17 @@ export class TasksController {
   findAll(
     @Query() query: string,
     @Query('isCompleted') isCompleted: boolean,
+    @Query('userId') userId: number,
     @Query('current') current: string,
     @Query('pageSize') pageSize: string,
   ) {
-    return this.tasksService.findAll(query, isCompleted, +current, +pageSize);
+    return this.tasksService.findAll(
+      query,
+      isCompleted,
+      userId,
+      +current,
+      +pageSize,
+    );
   }
 
   @Get(':id')
